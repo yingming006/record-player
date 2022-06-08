@@ -5,10 +5,8 @@ const request = require('superagent')
 const response = require('../common/response')
 
 router.get('/search', function (req, res, next) {
-    let page = Number(req.query.page) || 0
-    let size = Number(req.query.size) || 30
     let keyword = encodeURIComponent(req.query.keyword || '')
-    request.get(`http://music.163.com/api/search/get/web?csrf_token=&hlpretag=&hlposttag=&s=${keyword}&type=1&offset=${page}&total=true&limit=${size}`)
+    request.get(`https://netease-cloud-music-api-mocha-mu-31.vercel.app/search?keywords=${keyword}`)
         .end((err1, res1) => {
             if (err1) {
                 res.send(response(100001, '获取失败'))
@@ -29,13 +27,15 @@ router.get('/search', function (req, res, next) {
 
 router.get('/songDetail', function (req, res, next) {
     let id = Number(req.query.id) || 0
-    request.get(`http://music.163.com/api/song/detail?ids=%5B${id}%5D`)
+    request.get(`https://netease-cloud-music-api-mocha-mu-31.vercel.app/song/detail?ids=${id}`)
         .end((err1, res1) => {
             if (err1) {
                 res.send(response(100001, '获取失败'))
                 return false
             }
+            
             let data = JSON.parse(res1.text)
+            console.log(JSON.parse(res1.text).songs)
             if (data.code === 200 && data.songs && data.songs[0]) res.send(response(100000, '成功', data.songs[0]))
             else res.send(response(100002, '获取失败'))
         })
@@ -43,7 +43,7 @@ router.get('/songDetail', function (req, res, next) {
 
 router.get('/lyric', function (req, res, next) {
     let id = Number(req.query.id) || 0
-    request.get(`http://music.163.com/api/song/lyric?os=pc&id=${id}&lv=-1&kv=-1&tv=-1`)
+    request.get(`https://netease-cloud-music-api-mocha-mu-31.vercel.app/lyric?id=${id}`)
         .end((err1, res1) => {
             if (err1) {
                 res.send(response(100001, '获取失败'))

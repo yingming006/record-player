@@ -281,7 +281,7 @@ export default {
             let that = this
             axios.get(`/api/songDetail?id=${this.playData.id}`).then(res => {
                 if (res.data.status === 100000) {
-                    let img = res.data.data.album.picUrl || res.data.data.album.blurPicUrl || ''
+                    let img = res.data.data.al.picUrl || res.data.data.al.blurPicUrl || ''
                     let index = this.idFindIndex(1, this.playData.id)
                     this.playData.albumPic = img
                     this.$set(that.playList[1][index], 'albumPic', img)
